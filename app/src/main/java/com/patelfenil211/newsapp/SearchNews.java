@@ -7,12 +7,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,28 +35,25 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class SearchNews extends AppCompatActivity {
 
-    //RecyclerView from activity_main.xml file
-    private RecyclerView newsRV;
+    //UI views from search_news.xml file
+    private EditText searchEditText;
+    private RecyclerView searchNewsRV;
 
-    private ArrayList<NewsModel> newsList;
     private NewsAdapter newsAdapter;
+    private ArrayList<NewsModel> newsList;
 
     private BottomNavigationView bottomNavigationView;
 
-    /**
-     * onCreate method...
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.search_news);
 
-        //bottom navigation
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         Menu menu = bottomNavigationView.getMenu();
-        MenuItem menuItem = menu.getItem(0);
+        MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -60,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId())
                 {
                     case R.id.action_home:
+                        Intent intent = new Intent(SearchNews.this, MainActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.action_search:
-                        Intent intent = new Intent(MainActivity.this, SearchNews.class);
-                        startActivity(intent);
                         break;
                 }
 
@@ -71,24 +74,47 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         int gridColumnCount =
                 getResources().getInteger(R.integer.grid_column_count);
 
-        //initialize RecyclerView
-        newsRV = findViewById(R.id.newsRV);
+        //initialize UI views
+        searchEditText = findViewById(R.id.searchEditText);
+        searchNewsRV = findViewById(R.id.searchNewsRV);
 
         //set the LayoutManager.
-        newsRV.setLayoutManager(new GridLayoutManager(this, gridColumnCount));
+        searchNewsRV.setLayoutManager(new GridLayoutManager(this, gridColumnCount));
 
-        //method call...
-        displayTopHeadlines();
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH)
+                {
+                    String searchKey = v.getText().toString();
+
+                    if(searchKey.equals("")) {
+                        Toast.makeText(SearchNews.this, "Please Enter Your Search!", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        //method call...
+                        displaySearchedNews(searchKey);
+                    }
+
+                    //hide the keyword and remove focus from EditText
+                    InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    searchEditText.clearFocus();
+
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
-     * displayTopHeadlines method...
+     * displaySearchedNews method...
      */
-    public void displayTopHeadlines()
+    public void displaySearchedNews(String searchKey)
     {
         //initialize list
         newsList = new ArrayList<>();
@@ -98,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         //endpoint to get data
-        String url = "https://gnews.io/api/v4/top-headlines?lang=en&token=" + Constants.API_KEY4;
+        String url = "https://gnews.io/api/v4/search?q=" + searchKey + "&lang=en&token=" + Constants.API_KEY4;
 
         //request data
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -116,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     for(int i=0; i<jsonArray.length(); i++)
                     {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                        
+
                         JSONObject sourceObject = jsonObject1.getJSONObject("source");
                         String name = sourceObject.getString("name");
                         String title = jsonObject1.getString("title");
@@ -156,20 +182,20 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //setup adapter
-                    newsAdapter = new NewsAdapter(MainActivity.this, newsList);
+                    newsAdapter = new NewsAdapter(SearchNews.this, newsList);
                     //set adapter to recycler view
-                    newsRV.setAdapter(newsAdapter);
+                    searchNewsRV.setAdapter(newsAdapter);
                 }
                 catch(Exception e) {
                     //exception while loading JSON data
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchNews.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //error while requesting for response
-                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchNews.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

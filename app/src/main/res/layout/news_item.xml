@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sourceNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/newsTitleTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/colorBlack"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/newsImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="@string/imageview"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/newsDescriptionTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGrey2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSend"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send_btn"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorBlack"
+                app:icon="@drawable/ic_send"
+                app:iconPadding="0dp"
+                app:iconTint="@color/colorBlack"
+                app:rippleColor="@color/colorGrey1"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/publishedAtTV"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textAlignment="textEnd"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

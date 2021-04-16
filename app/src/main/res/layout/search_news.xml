@@ -6,12 +6,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".SearchNews">
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:textSize="14sp"
+        android:background="@drawable/shape_rectangle"
+        android:backgroundTint="@color/colorGrey1"
+        android:hint="@string/search_news"
+        android:inputType="text"
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
+        android:focusableInTouchMode="true"
+        tools:targetApi="lollipop"
+        android:autofillHints=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/searchNewsRV" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/newsRV"
+        android:id="@+id/searchNewsRV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="?attr/actionBarSize"
         android:scrollbars="vertical"
         tools:listitem="@layout/news_item"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +51,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-<!--    style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
